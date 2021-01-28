@@ -1,14 +1,35 @@
-from sense_hat import SenseHat 
+#!/usr/bin/env python
+
+from sense_hat import SenseHat
+from influxdb import InfluxDBClient
+import datetime
 
 sense = SenseHat()
 
-sense.set_rotation(180)
+host = "localhost"
+port = 8086
+user = "grafana"
+password = "polska32"
+db = "home"
 
-sense.set_pixel(2, 2, (0, 0, 255))
-sense.set_pixel(4, 2, (0, 0, 255))
-sense.set_pixel(3, 4, (100, 0, 0))
-sense.set_pixel(1, 5, (255, 0, 0))
-sense.set_pixel(2, 6, (255, 0, 0))
-sense.set_pixel(3, 6, (255, 0, 0))
-sense.set_pixel(4, 6, (255, 0, 0))
-sense.set_pixel(5, 5, (255, 0, 0))
+t = sense.get_temperature()
+p = sense.get_pressure()
+h = sense.get_humidity()
+
+time = datetime.datetime.utcnow()
+
+data = [
+	       {
+		#"measurement": session,
+		"time": time,
+		"fields":
+			{
+			"temperaturevalue": t,
+			"pressurevalue": p,
+			"humidityvalue": h,
+			}
+		}
+		]
+
+ifclient = InfluxDBClient(host,port,user,password,db)
+ifclient.write_points(data)
