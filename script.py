@@ -3,6 +3,7 @@
 from sense_hat import SenseHat
 from influxdb import InfluxDBClient
 import datetime
+import argparse
 
 sense = SenseHat()
 
@@ -18,9 +19,12 @@ h = sense.get_humidity()
 
 time = datetime.datetime.utcnow()
 
+parser = argparse.ArgumentParser(description='Program writes measurements data from SenseHat to influx')
+parser.add_argument(
+
 data = [
 	       {
-		#"measurement": session,
+		"measurement": session,
 		"time": time,
 		"fields":
 			{
